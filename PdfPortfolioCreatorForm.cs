@@ -25,6 +25,7 @@ namespace PdfPortfolioCreator
         string message;
         string title;
         int ClickCount;
+
         //For the purpose of this demo, the keys are used within the application.
         //In a real world application, they should be treated as secret keys and protected accordingl
         //Also note that the keys I'm using below are trial keys and will expire after a period of time.
@@ -144,6 +145,7 @@ namespace PdfPortfolioCreator
                     ErrorCode error_code = Library.Initialize(sn, key);
                     ClickCount++;
                     string path;
+                    //As a personal convention I feel it would be nice to have a separate result for each time we click the "Create Portfolio" button. 
                     if (ClickCount - 1 < 1)
                     {
                         path = $"{saveFileDialog.SelectedPath}\\PortfolioDocument.pdf";
@@ -164,7 +166,7 @@ namespace PdfPortfolioCreator
                     }
                     else
                     {
-                        path = saveFileDialog.SelectedPath;
+                        path = $"{saveFileDialog.SelectedPath}\\PortfolioDocument{ClickCount}.pdf";
                         PDFDoc portfolio_pdf_doc = new PDFDoc(path);
                         if (portfolio_pdf_doc.GetFileSize() < 1)
                         {
