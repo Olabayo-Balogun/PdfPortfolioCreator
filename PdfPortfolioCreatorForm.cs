@@ -20,11 +20,12 @@ namespace PdfPortfolioCreator
         public static int width;
         public static int height;
         public static PortfolioFolderNode root_folder;
+        //It's important we initialize the portfolio as early as possible to creates a blank portfolio that we can attach files to.
         public static Portfolio portfolio = Portfolio.CreatePortfolio();
         public static PortfolioNode root_node;
         string message;
         string title;
-        int ClickCount;
+        int clickCount;
 
         //For the purpose of this demo, the keys are used within the application.
         //In a real world application, they should be treated as secret keys and protected accordingl
@@ -71,51 +72,18 @@ namespace PdfPortfolioCreator
                             {
                                 Library.Release();
                             }
+                            //The first step in adding files to the porfolio is to get the root of the portoflio to which we then add files
                             root_node = portfolio.GetRootNode();                            
+                            //Next up with the code below we get create a root folder for the portfolio where we house the root note
                             root_folder = new PortfolioFolderNode(root_node);
+                            //We use the sub_nodes to have all nodes arranged
                             PortfolioNodeArray sub_nodes = root_folder.GetSortedSubNodes();
+                            //Below we're then able to add individual files (through their file path) to the root folder of the portfolio.
                             PortfolioFileNode file_node = root_folder.AddFile(file);
+                            //With file_spec we can get more context with regards to the nature of the file.
                             FileSpec file_spec = file_node.GetFileSpec();
+                            //The status below helps us know if we were able to successfully add a file to the node
                             bool status = root_node.IsEmpty();
-                            
-//                            using (PortfolioNode root_node = portfolio.GetRootNode())
-//{
-//                                using (PortfolioFolderNode root_folder = new PortfolioFolderNode(root_node))
-//                                {
-//                                    using (PortfolioNodeArray sub_nodes = root_folder.GetSortedSubNodes())
-//                                    {
-//                                    for (uint index = 0; index < sub_nodes.GetSize(); index++)
-//                                        {
-//                                            using (PortfolioNode root_node = sub_nodes.GetAt(index))
-//                                            {
-//                                                switch (root_node.GetNodeType())
-//                                                {
-//                                                    case PortfolioNode.Type.e_TypeFolder:
-//                                                        {
-//                                                            using (PortfolioFolderNode folder_node = new PortfolioFolderNode(root_node))
-//                                                            {
-//                                                                // Use PortfolioFolderNode's getting method to get some properties.
-//                                                             PortfolioNodeArray sub_nodes_2 = folder_node.GetSortedSubNodes();
-//                                                             break;
-//                                                            }
-//                                                        }
-//                                                    case PortfolioNode.Type.e_TypeFile:
-//                                                        {
-//                                                            using (PortfolioFileNode file_node = new PortfolioFileNode(root_node))
-//                                                            {
-//                                                                // Get file specification object from this file root_node, and then get/set information from/to this file specification object.
-//                                                            using (FileSpec file_spec = file_node.GetFileSpec())
-//                                                                {
-//                                                                    break;
-//                                                                }
-//                                                            }
-//                                                        }
-//                                                }
-//                                            }
-//                                        }
-//                                    }
-//                                }
-//                            }
                         }
                         message = $"{fileCount} files added successfully!";
                         title = "Select Portfolio Files Status";
@@ -139,57 +107,38 @@ namespace PdfPortfolioCreator
         {
             try
             {
+                //With saveFileDialog below, we can choose the location to which we save the portfolio
                 FolderBrowserDialog saveFileDialog = new FolderBrowserDialog();
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     ErrorCode error_code = Library.Initialize(sn, key);
-                    ClickCount++;
+                    clickCount++;
                     string path;
                     //As a personal convention I feel it would be nice to have a separate result for each time we click the "Create Portfolio" button. 
-                    if (ClickCount - 1 < 1)
+                    //I'm using "clickCount" to hold the number of times we click the "Create Portfolio" document.
+                    if (clickCount - 1 < 1)
                     {
                         path = $"{saveFileDialog.SelectedPath}\\PortfolioDocument.pdf";
-                        //if (portfolio.GetPortfolioPDFDoc().GetFileSize() < 1)
-                        //{
-                        //    message = $"Please add files to your portfolio";
-                        //    title = "No Portfolio File Selected";
-                        //    MessageBox.Show(message, title);
-                        //}
-                        //else
-                        {
-                            PdfPortfolioDocument = portfolio.GetPortfolioPDFDoc();
-                            PdfPortfolioDocument.SaveAs(path, (int)PDFDoc.SaveFlags.e_SaveFlagNoOriginal);
-                            message = $"PDF portfolio created! ";
-                            title = "Create PDF Portfolio Status";
-                            MessageBox.Show(message, title);
-                        }
+                        PdfPortfolioDocument = portfolio.GetPortfolioPDFDoc();
+                        PdfPortfolioDocument.SaveAs(path, (int)PDFDoc.SaveFlags.e_SaveFlagNoOriginal);
+
+                        DisplayFirstPPage(PdfPortfolioDocument);
+                        message = $"PDF portfolio saved to {path}";
+                        title = "Create PDF Portfolio Status";
+                        MessageBox.Show(message, title);
                     }
                     else
                     {
-                        path = $"{saveFileDialog.SelectedPath}\\PortfolioDocument{ClickCount}.pdf";
+                        path = $"{saveFileDialog.SelectedPath}\\PortfolioDocument({clickCount}).pdf";
                         PDFDoc portfolio_pdf_doc = new PDFDoc(path);
-                        if (portfolio_pdf_doc.GetFileSize() < 1)
-                        {
-                            message = $"Please add files to your portfolio";
-                            title = "No Portfolio File Selected";
-                            MessageBox.Show(message, title);
-                        }
-                        else if (!portfolio_pdf_doc.IsPortfolio())
-                        {
-                            message = $"Please add files to your portfolio";
-                            title = "No Portfolio File Selected";
-                            MessageBox.Show(message, title);
-                        }
-                        else if (portfolio_pdf_doc.IsPortfolio())
-                        {
-                            Portfolio existed_portfolio = Portfolio.CreatePortfolio(portfolio_pdf_doc);
-                            PdfPortfolioDocument = existed_portfolio.GetPortfolioPDFDoc();
-                            ClickCount++;
-                            PdfPortfolioDocument.SaveAs(path, (int)PDFDoc.SaveFlags.e_SaveFlagNoOriginal);
-                            message = $"PDF portfolio created! ";
-                            title = "Create PDF Portfolio Status";
-                            MessageBox.Show(message, title);
-                        }
+                        Portfolio existed_portfolio = Portfolio.CreatePortfolio(portfolio_pdf_doc);
+                        PdfPortfolioDocument = existed_portfolio.GetPortfolioPDFDoc();
+                        PdfPortfolioDocument.SaveAs(path, (int)PDFDoc.SaveFlags.e_SaveFlagNoOriginal);
+
+                        DisplayFirstPPage(PdfPortfolioDocument);
+                        message = $"PDF portfolio saved to {path}";
+                        title = "Create PDF Portfolio Status";
+                        MessageBox.Show(message, title);                       
                     }
                 }
             }                
@@ -203,5 +152,32 @@ namespace PdfPortfolioCreator
             
         }
 
+        private void DisplayFirstPPage(PDFDoc pdfPortfolioDocument)
+        {
+            //The purpose of this method is to render the first page of the selected PDF portfolio in the windows form 
+            Page = pdfPortfolioDocument.GetPage(0);
+            Page.StartParse((int)PDFPage.ParseFlags.e_ParsePageNormal, null, false);
+            width = (int)(Page.GetWidth());
+            height = (int)(Page.GetHeight());
+
+            Matrix2D matrix = Page.GetDisplayMatrix(0, 0, width, height, Page.GetRotation());
+
+            // Prepare a bitmap for rendering.
+            foxit.common.Bitmap bitmap = new foxit.common.Bitmap(width, height, foxit.common.Bitmap.DIBFormat.e_DIBRgb32);
+            System.Drawing.Bitmap sbitmap = bitmap.GetSystemBitmap();
+            Graphics draw = Graphics.FromImage(sbitmap);
+            draw.Clear(System.Drawing.Color.White);
+
+            // Render page
+            Renderer render = new Renderer(bitmap, false);
+            render.StartRender(Page, matrix, null);
+
+            // Add the bitmap to image and save the image.
+            foxit.common.Image image = new foxit.common.Image();
+            string imgPath = $"{FilePath.Split('.').First()}IndexPage.jpg";
+            image.AddFrame(bitmap);
+            image.SaveAs(imgPath);
+            DocumentDisplay.Image = System.Drawing.Image.FromFile(imgPath);
+        }
     }
 }
