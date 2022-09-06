@@ -130,9 +130,9 @@ namespace PdfPortfolioCreator
                     else
                     {
                         path = $"{saveFileDialog.SelectedPath}\\PortfolioDocument({clickCount}).pdf";
-                        PDFDoc portfolio_pdf_doc = new PDFDoc(path);
-                        Portfolio existed_portfolio = Portfolio.CreatePortfolio(portfolio_pdf_doc);
-                        PdfPortfolioDocument = existed_portfolio.GetPortfolioPDFDoc();
+                        PDFDoc portfolioPdfDoc = new PDFDoc(path);
+                        Portfolio existedPortfolio = Portfolio.CreatePortfolio(portfolioPdfDoc);
+                        PdfPortfolioDocument = existedPortfolio.GetPortfolioPDFDoc();
                         PdfPortfolioDocument.SaveAs(path, (int)PDFDoc.SaveFlags.e_SaveFlagNoOriginal);
 
                         DisplayFirstPPage(PdfPortfolioDocument);
