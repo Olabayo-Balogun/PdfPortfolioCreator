@@ -19,10 +19,10 @@ namespace PdfPortfolioCreator
         public static PDFPage Page;
         public static int width;
         public static int height;
-        public static PortfolioFolderNode root_folder;
+        public static PortfolioFolderNode RootFolder;
         //It's important we initialize the portfolio as early as possible to creates a blank portfolio that we can attach files to.
         public static Portfolio portfolio = Portfolio.CreatePortfolio();
-        public static PortfolioNode root_node;
+        public static PortfolioNode RootNode;
         string message;
         string title;
         int clickCount;
@@ -55,8 +55,8 @@ namespace PdfPortfolioCreator
                 {
                     int fileCount = openFileDialog.FileNames.Count();
                     
-                    ErrorCode error_code = Library.Initialize(sn, key);
-                    if (error_code != ErrorCode.e_ErrSuccess)
+                    ErrorCode errorCode = Library.Initialize(sn, key);
+                    if (errorCode != ErrorCode.e_ErrSuccess)
                     {
                         message = "Unable to verify your SDK activation key";
                         title = "Select Portfolio Files Status";
@@ -68,22 +68,22 @@ namespace PdfPortfolioCreator
                         // Read the files
                         foreach (String file in openFileDialog.FileNames)
                         {
-                            if (error_code != ErrorCode.e_ErrSuccess)
+                            if (errorCode != ErrorCode.e_ErrSuccess)
                             {
                                 Library.Release();
                             }
                             //The first step in adding files to the porfolio is to get the root of the portoflio to which we then add files
-                            root_node = portfolio.GetRootNode();                            
+                            RootNode = portfolio.GetRootNode();                            
                             //Next up with the code below we get create a root folder for the portfolio where we house the root note
-                            root_folder = new PortfolioFolderNode(root_node);
-                            //We use the sub_nodes to have all nodes arranged
-                            PortfolioNodeArray sub_nodes = root_folder.GetSortedSubNodes();
+                            RootFolder = new PortfolioFolderNode(RootNode);
+                            //We use the subNodes to have all nodes arranged
+                            PortfolioNodeArray subNodes = RootFolder.GetSortedSubNodes();
                             //Below we're then able to add individual files (through their file path) to the root folder of the portfolio.
-                            PortfolioFileNode file_node = root_folder.AddFile(file);
-                            //With file_spec we can get more context with regards to the nature of the file.
-                            FileSpec file_spec = file_node.GetFileSpec();
+                            PortfolioFileNode fileNode = RootFolder.AddFile(file);
+                            //With fileSpec we can get more context with regards to the nature of the file.
+                            FileSpec fileSpec = fileNode.GetFileSpec();
                             //The status below helps us know if we were able to successfully add a file to the node
-                            bool status = root_node.IsEmpty();
+                            bool status = RootNode.IsEmpty();
                         }
                         message = $"{fileCount} files added successfully!";
                         title = "Select Portfolio Files Status";
@@ -111,7 +111,7 @@ namespace PdfPortfolioCreator
                 FolderBrowserDialog saveFileDialog = new FolderBrowserDialog();
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    ErrorCode error_code = Library.Initialize(sn, key);
+                    ErrorCode errorCode = Library.Initialize(sn, key);
                     clickCount++;
                     string path;
                     //As a personal convention I feel it would be nice to have a separate result for each time we click the "Create Portfolio" button. 
