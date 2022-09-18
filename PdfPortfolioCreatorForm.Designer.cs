@@ -85,6 +85,7 @@
 
         #endregion
 
+        //Note that these properties are declared outside of the "InitializeComponent()" block of code
         public PictureBox DocumentDisplay;
         private Button AddFiles;
         private Button CreatePortfolio;
