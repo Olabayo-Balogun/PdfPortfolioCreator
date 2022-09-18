@@ -9,6 +9,7 @@ To be able to use this application, you need a trial key at the very least, you 
 Note: There is a high likelihood that the trial key used in this application may have expired by the time you want to demo this application, as such you're strongly advised to register for your trial key by clicking this [link](https://developers.foxit.com/pdf-sdk/free-trial/) 
 
 Running the Windows Form
+
 Step 1: Navigate to "\PdfPortfolioCreator.sln" within the application file path.
 
 Step 2: Double-click the "PdfPortfolioCreator.sln" file to open the application using your IDE.
