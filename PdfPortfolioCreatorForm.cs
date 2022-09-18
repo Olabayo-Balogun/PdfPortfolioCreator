@@ -116,7 +116,7 @@ namespace PdfPortfolioCreator
                         PdfPortfolioDocument = portfolio.GetPortfolioPDFDoc();
                         PdfPortfolioDocument.SaveAs(path, (int)PDFDoc.SaveFlags.e_SaveFlagNoOriginal);
 
-                        DisplayFirstPPage(PdfPortfolioDocument);
+                        DisplayFirstPage(PdfPortfolioDocument);
                         message = $"PDF portfolio saved to {path}";
                         title = "Create PDF Portfolio Status";
                         MessageBox.Show(message, title);
@@ -129,7 +129,7 @@ namespace PdfPortfolioCreator
                         PdfPortfolioDocument = existedPortfolio.GetPortfolioPDFDoc();
                         PdfPortfolioDocument.SaveAs(path, (int)PDFDoc.SaveFlags.e_SaveFlagNoOriginal);
 
-                        DisplayFirstPPage(PdfPortfolioDocument);
+                        DisplayFirstPage(PdfPortfolioDocument);
                         message = $"PDF portfolio saved to {path}";
                         title = "Create PDF Portfolio Status";
                         MessageBox.Show(message, title);                       
@@ -146,7 +146,7 @@ namespace PdfPortfolioCreator
             
         }
 
-        private void DisplayFirstPPage(PDFDoc pdfPortfolioDocument)
+        private void DisplayFirstPage(PDFDoc pdfPortfolioDocument)
         {
             //The purpose of this method is to render the first page of the selected PDF portfolio in the windows form 
             Page = pdfPortfolioDocument.GetPage(0);
