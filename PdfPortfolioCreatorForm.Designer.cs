@@ -53,7 +53,7 @@
             this.AddFiles.TabIndex = 2;
             this.AddFiles.Text = "Add Files";
             this.AddFiles.UseVisualStyleBackColor = true;
-            this.AddFiles.Click += new System.EventHandler(this.AddFile_Click);
+            this.AddFiles.Click += new System.EventHandler(this.AddFiles_Click);
             // 
             // CreatePortfolio
             // 
