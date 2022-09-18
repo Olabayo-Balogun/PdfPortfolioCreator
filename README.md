@@ -4,6 +4,10 @@ A .Net Core Windows Form that helps you create PDF portfolios using Foxit PDF SD
 
 It runs on .Net 6.0 runtime, you should have .Net 6 SDK or runtime installed on your system to be able to run this appliction
 
+To be able to use this application, you need a trial key at the very least, you should register for a [Trial key of Foxit PDF SDK for Windows](https://developers.foxit.com/pdf-sdk/free-trial/). 
+
+Note: There is a high likelihood that the trial key used in this application may have expired by the time you want to demo this application, as such you're strongly advised to register for your trial key by clicking this [link](https://developers.foxit.com/pdf-sdk/free-trial/) 
+
 Running the Windows Form
 Step 1: Navigate to "\PdfPortfolioCreator.sln" within the application file path.
 
